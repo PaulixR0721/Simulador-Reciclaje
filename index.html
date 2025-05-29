@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="estilos.css">
+
+  <title>Simulador de Clasificación de Residuos</title>
+</head>
+<body>
+  <div id="gameContainer">
+  <h1>Simulador de Clasificación de Residuos</h1>
+  <h2>¿Tienes dudas sobre dónde va el residuo? Escanéalo y te ayudaremos.</h2>
+  <h1></h1>
+  <h2></h2>
+  <div id="scanner-area">
+    <div class="scanner" id="scanner" ondrop="scanItem(event)" ondragover="event.preventDefault()">
+      Escanear aquí<br>Arrastra el icono acá
+    </div>
+    <div id="scanner-msg"></div>
+  </div>
+  <div id="score-container">
+    <div id="score">Puntaje: <span id="score-value">0</span></div>
+    <button onclick="resetGame()">Reiniciar</button>
+  </div>
+  <div id="result-msg"></div>
+  <div id="items">
+     <div class="item" draggable="true" data-type="vaso">
+      <img src="vaso.png" alt="Vaso Sucio">
+      <div class="label">Vaso Sucio</div>
+    </div>
+    <div class="item" draggable="true" data-type="icopor">
+      <img src="icopor.png" alt="Plato Icopor">
+      <div class="label">Recipiente de Icopor</div>
+    </div>
+    <div class="item" draggable="true" data-type="organico">
+      <img src="cascara.png" alt="Cáscara">
+      <div class="label">Cáscara</div>
+    </div>
+    <div class="item" draggable="true" data-type="botella">
+      <img src="botella.png" alt="Botella">
+      <div class="label">Botella</div>
+    </div>
+    <div class="item" draggable="true" data-type="tapa">
+      <img src="tapa.png" alt="Tapa">
+      <div class="label">Tapa</div>
+    </div>
+    <div class="item" draggable="true" data-type="liquido">
+      <img src="liquido.png" alt="Líquido">
+      <div class="label">Líquido</div>
+    </div>
+    <div class="item" draggable="true" data-type="botella">
+      <img src="botella.png" alt="Botella">
+      <div class="label">Botella</div>
+    </div>
+    <div class="item" draggable="true" data-type="papel">
+      <img src="papel.png" alt="Papel">
+      <div class="label">Papel</div>
+    </div>
+    <div class="item" draggable="true" data-type="botella">
+      <img src="botella.png" alt="Botella">
+      <div class="label">Botella</div>
+    </div>
+    <div class="item" draggable="true" data-type="lata">
+      <img src="lata.png" alt="Lata">
+      <div class="label">Lata</div>
+    </div>
+    </div>
+  </div>
+
+  <div id="bins">
+  <div class="bin" data-type="organico" ondrop="drop(event)" ondragover="event.preventDefault()">
+    <img src="Verde.png" alt="Orgánico" width="60"><br>Orgánico
+  </div>
+  <div class="bin" data-type="reciclable" ondrop="drop(event)" ondragover="event.preventDefault()">
+    <img src="Blanco.png" alt="Aprovechable" width="60"><br>Aprovechable
+  </div>
+  <div class="bin" data-type="no-aprovechable" ondrop="drop(event)" ondragover="event.preventDefault()">
+    <img src="Negro.png" alt="No Aprovechable" width="60"><br>No Aprovechable
+  </div>
+  <div class="bin" data-type="botella" ondrop="drop(event)" ondragover="event.preventDefault()">
+  <img src="BotellaC.png" alt="Botellas" class="bin-img">
+  <div class="bin-label">Botellas (<span id="botella-count">0</span>)</div>
+  </div>
+  <div class="bin" data-type="tapa" ondrop="drop(event)" ondragover="event.preventDefault()">
+  <img src="TapaC.png" alt="Tapas" class="bin-img">
+  <div class="bin-label">Tapas (<span id="tapa-count">0</span>)</div>
+  </div>
+  <div class="bin" data-type="liquido" ondrop="drop(event)" ondragover="event.preventDefault()">
+    <img src="LiquidoC.png" alt="Líquidos" width="60"><br>Líquidos
+  </div>
+  <div class="bin" data-type="vaso" ondrop="drop(event)" ondragover="event.preventDefault()">
+    <img src="VasosC.png" alt="Vasos Sucios" width="60"><br>Vasos Sucios
+  </div>
+</div>
+
+  <script>
+    let currentItem = null;
+    let score = 0;
+    let botellaCount = 0;
+    let tapaCount = 0;
+
+    const itemsContainer = document.getElementById('items');
+    
+    function handleDragStart(e) {
+  currentItem = e.currentTarget;
+}
+
+document.querySelectorAll('.item').forEach(el => {
+  el.addEventListener('dragstart', handleDragStart);
+});
+function scanItem(e) {
+  e.preventDefault();
+  if (!currentItem) return;
+
+  const type = currentItem.dataset.type;
+  console.log("Tipo detectado:", type);
+  const messages = {
+  organico: '<div class="msg"><div>Debe ir en Orgánico</div><img src="verde.png" class="msg-img"></div>',
+  botella: '<div class="msg"><div>Debe ir en Botellas</div><img src="botellaC.png" class="msg-img"></div>',
+  tapa: '<div class="msg"><div>Debe ir en Tapas</div><img src="tapaC.png" class="msg-img"></div>',
+  liquido: '<div class="msg"><div>Debe ir en Líquidos</div><img src="liquidoC.png" class="msg-img"></div>',
+  vaso: '<div class="msg"><div>Debe ir en Vasos Sucios</div><img src="vasoSC.png" class="msg-img"></div>',
+  papel: '<div class="msg"><div>Debe ir en Aprovechable</div><img src="blanco.png" class="msg-img"></div>',
+  lata: '<div class="msg"><div>Debe ir en Aprovechable</div><img src="blanco.png" class="msg-img"></div>',
+  vidrio: '<div class="msg"><div>Debe ir en Aprovechable</div><img src="blanco.png" class="msg-img"></div>',
+  carton: '<div class="msg"><div>Debe ir en Aprovechable</div><img src="blanco.png" class="msg-img"></div>',
+  "carton-sucio": '<div class="msg"><div>Debe ir en No Aprovechable</div><img src="negro.png" class="msg-img"></div>',
+  icopor: '<div class="msg"><div>Debe ir en No Aprovechable</div><img src="negro.png" class="msg-img"></div>'
+};
+
+
+
+  document.getElementById('scanner-msg').innerHTML = messages[type] || "Clasificación desconocida";
+}
+
+    function drop(e) {
+  e.preventDefault();
+  if (!currentItem) return;
+
+  const binType = e.currentTarget.dataset.type;
+  const itemType = currentItem.dataset.type;
+
+  const correctMatches = {
+    organico: ["organico"],
+    botella: ["botella"],
+    tapa: ["tapa"],
+    liquido: ["liquido"],
+    vaso: ["vaso"],
+    reciclable: ["papel", "lata", "vidrio"],
+    "no-aprovechable": ["carton-sucio", "icopor"]
+  };
+
+  let isCorrect = correctMatches[binType]?.includes(itemType);
+
+  const resultMsg = document.getElementById('result-msg');
+
+  if (isCorrect) {
+    currentItem.classList.add('correct');
+    resultMsg.textContent = "¡Correcto!";
+    resultMsg.style.color = "green";
+    score++;
+    document.getElementById('score-value').textContent = score;
+
+    if (itemType === "botella") {
+      botellaCount++;
+      document.getElementById('botella-count').textContent = botellaCount;
+    }
+    if (itemType === "tapa") {
+      tapaCount++;
+      document.getElementById('tapa-count').textContent = tapaCount;
+    }
+  } else {
+    currentItem.classList.add('incorrect');
+    resultMsg.textContent = "Incorrecto.";
+    resultMsg.style.color = "red";
+  }
+
+  currentItem.draggable = false;
+  currentItem.removeEventListener('dragstart', handleDragStart);
+  e.currentTarget.appendChild(currentItem);
+  currentItem = null;
+}
+
+
+
+    function resetGame() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>
