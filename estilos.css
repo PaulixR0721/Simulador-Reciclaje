@@ -1,37 +1,33 @@
-/* GENERAL */
+/* Reduce el interlineado de los textos de arriba */
+h1, h2, p {
+  line-height: 2; /* O prueba con 1.1 para más compacto */
+  margin: 0;
+}
+
+/* Centra el contenedor de puntaje y botón en la página (si es necesario) */
+#gameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
 body {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  margin: 0;
 }
 
-h1, h2, p {
-  line-height: 1.2;
-  margin: 0;
-}
-
-/* GAME CONTAINER */
-#gameContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1200px;
-}
-
-/* SCORE CONTAINER */
 #score-container {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
   font-size: 2em;
-  flex-wrap: wrap;
 }
-
 #score-container button {
   border-radius: 8px;
   font-size: 0.6em;
@@ -40,7 +36,6 @@ h1, h2, p {
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* SCANNER AREA */
 #scanner-area,
 #items,
 #score,
@@ -50,10 +45,8 @@ h1, h2, p {
   flex-wrap: wrap;
   justify-content: center;
   gap: 15px;
-  width: 100%;
 }
 
-/* BINS */
 #bins {
   display: flex;
   flex-wrap: wrap;
@@ -62,32 +55,49 @@ h1, h2, p {
 }
 
 .bin {
-  flex: 1 1 120px;
-  max-width: 150px;
+  width: 10%;
   padding: 5px;
   border: 4px solid rgb(234, 234, 234);
   border-radius: 8px;
   background-color: #ffffff;
   display: flex;
+  justify-content: flex-start;
   flex-direction: column;
   align-items: center;
   text-align: center;
   font-size: 14px;
   cursor: grab;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
-  margin: 5px;
 }
 
 .bin img {
-  width: 100%;
-  max-width: 120px;
+  width: 120px;
   margin-bottom: 5px;
 }
 
-/* ITEMS */
+.bin .item {
+  width: 100px;
+  justify-content: center;
+
+}
+#scanner-msg {
+  text-align: center;
+}
+
+.msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.msg-img {
+  width: 150px;       /* o el tamaño que tú quieras */
+  height: auto;
+  margin-top: 8px;
+}
+
 .item {
   width: 100px;
-  max-width: 100%;
   padding: 5px;
   border: 3px solid rgb(234, 234, 234);
   border-radius: 8px;
@@ -99,7 +109,6 @@ h1, h2, p {
   font-size: 14px;
   cursor: grab;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-  margin: 5px;
 }
 
 .item img {
@@ -114,7 +123,6 @@ h1, h2, p {
   font-size: 13px;
 }
 
-/* SCANNER */
 .scanner {
   width: 200px;
   height: 200px;
@@ -129,21 +137,14 @@ h1, h2, p {
   text-align: center;
 }
 
-/* MENSAJES */
-#scanner-msg {
-  text-align: center;
+.correct {
+  border: 3px solid green !important;
+  background-color: #e8f5e9;
 }
 
-.msg {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.msg-img {
-  width: 150px;
-  height: auto;
-  margin-top: 8px;
+.incorrect {
+  border: 3px solid red !important;
+  background-color: #ffebee;
 }
 
 #result-msg {
@@ -166,46 +167,13 @@ button {
   transition: transform 0.3s ease;
 }
 
-/* ESTADOS */
-.correct {
-  border: 3px solid green !important;
-  background-color: #e8f5e9;
-}
-
-.incorrect {
-  border: 3px solid red !important;
-  background-color: #ffebee;
-}
-
-/* MEDIA QUERIES RESPONSIVE */
-@media (max-width: 900px) {
-  #score-container {
-    font-size: 1.5em;
-  }
-
-  .scanner {
-    width: 150px;
-    height: 150px;
-  }
-
-  .bin, .item {
-    width: 80px;
-    font-size: 12px;
-  }
-
-  .item img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .msg-img {
-    width: 120px;
-  }
-}
-
 @media (max-width: 600px) {
   body {
     padding: 10px;
+  }
+
+  h1, h2, p {
+    line-height: 1.1;
   }
 
   #score-container {
@@ -214,14 +182,31 @@ button {
     gap: 10px;
   }
 
+  #score-container button {
+    font-size: 0.8em;
+    padding: 8px 16px;
+  }
+
   .scanner {
     width: 120px;
     height: 120px;
+    font-size: 12px;
   }
 
-  .bin, .item {
-    width: 70px;
-    font-size: 11px;
+  .bin {
+    width: 30%;
+    font-size: 12px;
+    padding: 4px;
+  }
+
+  .bin img {
+    width: 60px;
+  }
+
+  .item {
+    width: 60px;
+    font-size: 12px;
+    padding: 4px;
   }
 
   .item img {
@@ -230,7 +215,7 @@ button {
   }
 
   .msg-img {
-    width: 100px;
+    width: 10px;
   }
 
   button {
